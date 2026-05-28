@@ -34,16 +34,19 @@ else
   echo "[~] 로그 디렉토리 이미 존재함: .agents/logs"
 fi
 
-# 3. 지식 저장소 폴더 구조 자동 빌드 (docs/adr, docs/failures)
+# 3. 5대 지식 저장소 폴더 구조 자동 빌드 및 안내 가이드(README) 작성
 ADR_DIR="${PROJECT_ROOT}/docs/adr"
 FAILURES_DIR="${PROJECT_ROOT}/docs/failures"
+DESIGN_DIR="${PROJECT_ROOT}/docs/system_design"
+REFACTOR_DIR="${PROJECT_ROOT}/docs/refactoring"
+SECURITY_DIR="${PROJECT_ROOT}/docs/security"
+TEST_DIR="${PROJECT_ROOT}/docs/testing"
 
+# (1) ADR 디렉토리 및 가이드 생성
 if [ ! -d "${ADR_DIR}" ]; then
   mkdir -p "${ADR_DIR}"
   echo "[+] 지식 저장소 디렉토리 생성 완료: docs/adr"
 fi
-
-# 한국어 주석: ADR 디렉토리 가이드용 README.md 파일이 존재하지 않는 경우 자동으로 작성합니다.
 if [ ! -f "${ADR_DIR}/README.md" ]; then
   cat <<'EOF' > "${ADR_DIR}/README.md"
 # Architecture Decision Records (ADR)
@@ -58,12 +61,11 @@ EOF
   echo "[+] ADR 가이드 README 생성 완료: docs/adr/README.md"
 fi
 
+# (2) Failures 디렉토리 및 가이드 생성
 if [ ! -d "${FAILURES_DIR}" ]; then
   mkdir -p "${FAILURES_DIR}"
   echo "[+] 지식 저장소 디렉토리 생성 완료: docs/failures"
 fi
-
-# 한국어 주석: Failures 디렉토리 가이드용 README.md 파일이 존재하지 않는 경우 자동으로 작성합니다.
 if [ ! -f "${FAILURES_DIR}/README.md" ]; then
   cat <<'EOF' > "${FAILURES_DIR}/README.md"
 # Failures Log (실패 경험 기록 저장소)
@@ -76,6 +78,82 @@ if [ ! -f "${FAILURES_DIR}/README.md" ]; then
 * **극복 및 우회책(Workaround)**: 임시 혹은 영구적으로 어떻게 문제를 해결하고 우회 설계를 도입했는지 정리하여, 다른 에이전트들이 같은 실수를 반복하지 않도록 가이드라인을 제시합니다.
 EOF
   echo "[+] Failures 가이드 README 생성 완료: docs/failures/README.md"
+fi
+
+# (3) System Design 디렉토리 및 가이드 생성
+if [ ! -d "${DESIGN_DIR}" ]; then
+  mkdir -p "${DESIGN_DIR}"
+  echo "[+] 지식 저장소 디렉토리 생성 완료: docs/system_design"
+fi
+if [ ! -f "${DESIGN_DIR}/README.md" ]; then
+  cat <<'EOF' > "${DESIGN_DIR}/README.md"
+# System Design & WBS (시스템 아키텍처 설계 및 태스크 보관소)
+
+이 디렉토리는 사용자의 고차원적 기획 요구사항을 바탕으로 `system_architect` 에이전트가 직접 분석하고 쪼갠 시스템 설계서와 마이크로 태스크 목록(WBS)을 보존하는 지식 저장소입니다.
+
+## ✍️ 작성 규칙
+* **요구사항 분석**: 비즈니스 가치와 기술적 실현 가능성 및 비기능 요구조건을 분석하여 기록합니다.
+* **상세 WBS 명세**: 독립적으로 실행할 수 있는 마이크로 개발 태스크 목록을 생성하고 적합한 개발 에이전트를 매핑합니다.
+* **파일 이름**: 순번 형식의 파일 이름(예: `0001-neo4j-source-parsing.md`)을 사용합니다.
+EOF
+  echo "[+] System Design 가이드 README 생성 완료: docs/system_design/README.md"
+fi
+
+# (4) Refactoring 디렉토리 및 가이드 생성
+if [ ! -d "${REFACTOR_DIR}" ]; then
+  mkdir -p "${REFACTOR_DIR}"
+  echo "[+] 지식 저장소 디렉토리 생성 완료: docs/refactoring"
+fi
+if [ ! -f "${REFACTOR_DIR}/README.md" ]; then
+  cat <<'EOF' > "${REFACTOR_DIR}/README.md"
+# Refactoring Design (아키텍처 개선 및 의존성 설계 보관소)
+
+이 디렉토리는 `architecture_analyst` (AA) 에이전트가 기존 코드베이스의 순환 참조, 강한 결합도, 아키텍처 레이어 위반 사항을 진단하여 도출한 리팩토링 및 의존성 역전(DIP) 설계도 문서를 보존하는 지식 저장소입니다.
+
+## ✍️ 작성 규칙
+* **의존성 결함 진단**: 클래스 간 강한 결합이 유발된 원인과 해결 목표를 작성합니다.
+* **의존성 역전(DIP) 설계**: 구체적인 추상 클래스/인터페이스 모듈 구성 계획과 설계도를 명시합니다.
+* **파일 이름**: 순번 형식의 파일 이름(예: `0001-decouple-user-module.md`)을 사용합니다.
+EOF
+  echo "[+] Refactoring 가이드 README 생성 완료: docs/refactoring/README.md"
+fi
+
+# (5) Security 디렉토리 및 가이드 생성
+if [ ! -d "${SECURITY_DIR}" ]; then
+  mkdir -p "${SECURITY_DIR}"
+  echo "[+] 지식 저장소 디렉토리 생성 완료: docs/security"
+fi
+if [ ! -f "${SECURITY_DIR}/README.md" ]; then
+  cat <<'EOF' > "${SECURITY_DIR}/README.md"
+# Security & Linter Audit Reports (보안 취약점 및 린트 감사 보고서 보관소)
+
+이 디렉토리는 `security_auditor` 에이전트가 코드 정적 검사를 통해 발견한 민감 개인정보/API Key 노출 위험, 심각한 보안 취약점, 그리고 핵심 린트 규칙 위반 내역과 구체적인 해결 방안 보고서를 보존하는 지식 저장소입니다.
+
+## ✍️ 작성 규칙
+* **취약 구간 명세**: 발견된 파일 경로와 라인 번호, 위험 등급(High/Medium/Low)을 정확히 기재합니다.
+* **조치 및 해결 가이드**: 개발자가 즉시 취약점을 교조할 수 있도록 구체적인 우회/패치 방안을 상세히 작성합니다.
+* **파일 이름**: 순번 형식의 파일 이름(예: `0001-credential-exposure-prevention.md`)을 사용합니다.
+EOF
+  echo "[+] Security 가이드 README 생성 완료: docs/security/README.md"
+fi
+
+# (6) Testing 디렉토리 및 가이드 생성
+if [ ! -d "${TEST_DIR}" ]; then
+  mkdir -p "${TEST_DIR}"
+  echo "[+] 지식 저장소 디렉토리 생성 완료: docs/testing"
+fi
+if [ ! -f "${TEST_DIR}/README.md" ]; then
+  cat <<'EOF' > "${TEST_DIR}/README.md"
+# QA Testing & Debugging Logs (테스트 검증 및 디버깅 보고서 보관소)
+
+이 디렉토리는 `qa_engineer` 에이전트가 빌드 또는 기동 테스트 실패 시 에러 로그를 분석하고 조치 가이드를 수행한 결함 진단서 및 QA 테스트 결과 보고서를 보존하는 지식 저장소입니다.
+
+## ✍️ 작성 규칙
+* **결함 실패 분석**: 구체적인 오류 증상, 에러 덤프 로그 및 발생한 근본 원인을 작성합니다.
+* **디버깅 조치 이력**: 코드 내 해결을 위해 수정한 타겟 라인과 환경 복구 가이드를 자세히 작성합니다.
+* **파일 이름**: 순번 형식의 파일 이름(예: `0001-smoke-test-failure-handling.md`)을 사용합니다.
+EOF
+  echo "[+] Testing 가이드 README 생성 완료: docs/testing/README.md"
 fi
 
 # 4. Git Pre-commit Hook 자동 연동
