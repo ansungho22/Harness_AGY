@@ -65,6 +65,7 @@
    * **AI 엔지니어 (AI Engineer)**: LLM 오케스트레이션, 고성능 프롬프트 설계, RAG 및 벡터 DB 파이프라인 설계를 위임하십시오. (`.agents/agents/ai_engineer/agent.json`)
    * **데이터 엔지니어 (Data Engineer)**: 대규모 데이터 파싱, ETL 파이프라인 최적화, 멱등성이 보장된 적재 설계를 위임하십시오. (`.agents/agents/data_engineer/agent.json`)
    * **아키텍처 분석가 (Architecture Analyst - AA)**: 전체 프로젝트 파일 구조, 의존성 관계, 모듈 결합 설계 및 리팩토링 개선안을 위임하십시오. (`.agents/agents/architecture_analyst/agent.json`)
+   * **시스템 아키텍트 (System Architect - SA)**: 추상적 요구사항 분석, 개발 로드맵 기획, 상세 마이크로 태스크(WBS) 설계 및 에이전트 매핑을 위임하십시오. (`.agents/agents/system_architect/agent.json`)
 4. **자동 피드백 루프**:
    * 테스트 실패 시 즉시 자율 디버깅을 시작하여 코드를 스스로 고치고 다시 기동 테스트를 실행하는 피드백 루프를 반복하십시오. 최대 3회로 제한하며, 해결이 안 될 경우 사용자에게 에러 로그와 함께 보고하십시오.
 
