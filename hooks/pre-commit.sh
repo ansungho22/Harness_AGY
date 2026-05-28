@@ -3,8 +3,24 @@
 # 한국어 주석: Git 커밋 직전에 자동으로 실행되는 Pre-commit 훅 스크립트입니다.
 # 코드 검증이 완전히 통과되지 않은 불안정한 상태에서는 커밋을 원천 봉쇄합니다.
 
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-TEST_RUNNER="${PROJECT_ROOT}/.agents/skills/run-test/run-test.sh"
+# 한국어 주석: 실행 중인 디렉토리 또는 Git 최상위 루트 디렉토리를 탐색하여 설정합니다.
+if git rev-parse --show-toplevel >/dev/null 2>&1; then
+  PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+else
+  PROJECT_ROOT="$(pwd)"
+fi
+
+# 한국어 주석: 타겟 프로젝트 서브모듈(submodule) 경로와 하네스 자체 로컬 경로를 동적으로 자동 감지합니다.
+SUBMODULE_RUNNER="${PROJECT_ROOT}/.agents/skills/run-test/run-test.sh"
+LOCAL_RUNNER="${PROJECT_ROOT}/skills/run-test/run-test.sh"
+
+if [ -f "${SUBMODULE_RUNNER}" ]; then
+  TEST_RUNNER="${SUBMODULE_RUNNER}"
+elif [ -f "${LOCAL_RUNNER}" ]; then
+  TEST_RUNNER="${LOCAL_RUNNER}"
+else
+  TEST_RUNNER=""
+fi
 
 echo "============================================="
 echo "[+] Git Commit 사전 검증 시작 (Pre-commit)"

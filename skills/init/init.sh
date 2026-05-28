@@ -10,7 +10,13 @@ set -e
 
 # 프로젝트 루트 디렉토리 정의
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-AGENT_DIR="${PROJECT_ROOT}/.agents"
+
+# 한국어 주석: 타겟 프로젝트 서브모듈(submodule) 경로와 하네스 자체 로컬 개발 경로를 동적으로 자동 감지하여 AGENT_DIR를 설정합니다.
+if [ -d "${PROJECT_ROOT}/.agents" ]; then
+  AGENT_DIR="${PROJECT_ROOT}/.agents"
+else
+  AGENT_DIR="${PROJECT_ROOT}"
+fi
 
 echo "============================================="
 echo "Antigravity 에이전트 하네스 고도화 초기화를 시작합니다."

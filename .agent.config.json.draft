@@ -1,0 +1,9 @@
+{
+  "project_type": "nodejs-example",
+  "lint_command": "npm run lint",
+  "test_command": "npm test",
+  "src_directory": "./src",
+  "telemetry": {
+    "enabled": false
+  }
+}
