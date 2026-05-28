@@ -13,13 +13,11 @@
       ],
       "toolNames": [
         "view_file",
-        "run_command",
         "search_web"
       ],
       "systemPromptConfig": {
         "includeSections": [
           "user_information",
-          "mcp_servers",
           "skills",
           "artifacts",
           "user_rules"

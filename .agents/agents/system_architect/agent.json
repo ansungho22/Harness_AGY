@@ -13,14 +13,17 @@
       ],
       "toolNames": [
         "view_file",
-        "search_web"
+        "search_web",
+        "invoke_subagent",
+        "send_message"
       ],
       "systemPromptConfig": {
         "includeSections": [
           "user_information",
           "skills",
           "artifacts",
-          "user_rules"
+          "user_rules",
+          "subagents"
         ]
       }
     }
