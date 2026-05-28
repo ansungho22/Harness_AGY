@@ -54,14 +54,10 @@ my-project/                         # 대상 소스코드 프로젝트 루트
 │   │   ├── security.rule.md         # 보안 및 안전 위험 명령 통제 규칙
 │   │   └── architecture.rule.md    # 계층 구조 침범 방지 및 의존성 역전 아키텍처 규칙
 │   │
-│   ├── hooks/                       # Git 이벤트 연동 자동화 훅 스크립트
-│   │   ├── pre-commit.sh            # git commit 시점 사전 자동 정밀 검사 훅
-│   │   ├── on-test-fail.sh          # 테스트 실패 포착 시 피드백 루프 가동 훅
-│   │   └── post-task.sh             # 잔여 임시 로그 정리를 위한 가비지 컬렉터(GC) 훅
-│   │
-│   └── workflows/                   # agy 워크플로우 단축 명령어 정의
-│       ├── init.yaml                # /init 슬래시 커맨드 → init 스킬 연결
-│       └── run-test.yaml            # /run-test 슬래시 커맨드 → run-test 스킬 연결
+│   └── hooks/                       # Git 이벤트 연동 자동화 훅 스크립트
+│       ├── pre-commit.sh            # git commit 시점 사전 자동 정밀 검사 훅
+│       ├── on-test-fail.sh          # 테스트 실패 포착 시 피드백 루프 가동 훅
+│       └── post-task.sh             # 잔여 임시 로그 정리를 위한 가비지 컬렉터(GC) 훅
 │
 └── docs/                            # 에이전트 전용 로컬 지식 저장소
     ├── adr/
