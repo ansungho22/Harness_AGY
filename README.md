@@ -34,7 +34,8 @@ my-project/ (대상 소스코드 프로젝트 루트)
 │   │   ├── backend_developer.md# 고성능 API 및 DB 설계 전문 백엔드 에이전트
 │   │   ├── frontend_developer.md# 컴포넌트 재사용 및 UI/UX 스타일 전문 프론트엔드 에이전트
 │   │   ├── ai_engineer.md     # LLM 연동, RAG 및 벡터 DB 설계 전문 AI 에이전트
-│   │   └── data_engineer.md   # ETL 파이프라인 및 대용량 처리 전문 데이터 에이전트
+│   │   ├── data_engineer.md   # ETL 파이프라인 및 대용량 처리 전문 데이터 에이전트
+│   │   └── architecture_analyst.md# 전체 프로젝트 구조 및 의존성 분석 전문 설계 에이전트 (AA)
 │   ├── rules/
 │   │   ├── security.rule.md   # 보안 및 안전 위험 명령 통제 규칙
 │   │   ├── guidelines.rule.md # 한국어 주석 강제, 클린코드 5대 수칙 등의 가이드라인

@@ -64,6 +64,7 @@
    * **프론트엔드 개발자 (Frontend Developer)**: 모던 UI/UX 스타일링, 상태 관리, 렌더링 성능 최적화 컴포넌트 개발을 위임하십시오. (`.agent/prompts/frontend_developer.md`)
    * **AI 엔지니어 (AI Engineer)**: LLM 오케스트레이션, 고성능 프롬프트 설계, RAG 및 벡터 DB 파이프라인 설계를 위임하십시오. (`.agent/prompts/ai_engineer.md`)
    * **데이터 엔지니어 (Data Engineer)**: 대규모 데이터 파싱, ETL 파이프라인 최적화, 멱등성이 보장된 적재 설계를 위임하십시오. (`.agent/prompts/data_engineer.md`)
+   * **아키텍처 분석가 (Architecture Analyst - AA)**: 전체 프로젝트 파일 구조, 의존성 관계, 모듈 결합 설계 및 리팩토링 개선안을 위임하십시오. (`.agent/prompts/architecture_analyst.md`)
 4. **자동 피드백 루프**:
    * 테스트 실패 시 즉시 자율 디버깅을 시작하여 코드를 스스로 고치고 다시 기동 테스트를 실행하는 피드백 루프를 반복하십시오. 최대 3회로 제한하며, 해결이 안 될 경우 사용자에게 에러 로그와 함께 보고하십시오.
 
