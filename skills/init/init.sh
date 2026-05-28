@@ -8,8 +8,15 @@
 
 set -e
 
-# 프로젝트 루트 디렉토리 정의
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# 한국어 주석: 하네스가 서브모듈로 마운트되어 실행 중인지, 혹은 하네스 자체 루트에서 로컬 기동 중인지 자동 판별하여 PROJECT_ROOT를 설정합니다.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ "${SCRIPT_DIR}" == *"/.agents/skills/init" ]]; then
+  # 서브모듈 마운트 실행 시: 3단계 상위가 실제 타겟 프로젝트 루트입니다.
+  PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+else
+  # 하네스 자체 로컬 실행 시: 2단계 상위가 루트입니다.
+  PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+fi
 
 # 한국어 주석: 타겟 프로젝트 서브모듈(submodule) 경로와 하네스 자체 로컬 개발 경로를 동적으로 자동 감지하여 AGENT_DIR를 설정합니다.
 if [ -d "${PROJECT_ROOT}/.agents" ]; then
@@ -167,7 +174,7 @@ GIT_DIR="${PROJECT_ROOT}/.git"
 if [ -d "${GIT_DIR}" ]; then
   HOOKS_DIR="${GIT_DIR}/hooks"
   mkdir -p "${HOOKS_DIR}"
-  
+
   # 하네스의 pre-commit.sh를 Git hooks로 복사 및 이름 변경
   cp "${AGENT_DIR}/hooks/pre-commit.sh" "${HOOKS_DIR}/pre-commit"
   chmod +x "${HOOKS_DIR}/pre-commit"
@@ -242,12 +249,9 @@ else
   TEST_CMD="npm test"
 fi
 
-# 드래프트 JSON 파일 경로 정의
+# 드래프트 JSON 파일 경로 정의 및 공식 실 설정 파일 정의
 DRAFT_FILE="${PROJECT_ROOT}/.agent.config.json.draft"
-
-if [ -f "${PROJECT_ROOT}/.agent.config.json" ]; then
-  echo "[~] 기존 .agent.config.json 파일이 이미 존재합니다. 안전을 위해 덮어쓰지 않고 드래프트 파일만 생성합니다."
-fi
+FINAL_FILE="${PROJECT_ROOT}/.agent.config.json"
 
 # 드래프트 파일 작성 (한국어 주석 포함)
 cat <<EOF > "${DRAFT_FILE}"
@@ -262,8 +266,18 @@ cat <<EOF > "${DRAFT_FILE}"
 }
 EOF
 
-echo "[+] 기술 스택 분석 결과를 담은 드래프트 설정 파일이 생성되었습니다: .agent.config.json.draft"
+echo "[+] 프로젝트 기술 스택 분석을 거쳐 임시 설정 파일이 정상 생성되었습니다: .agent.config.json.draft"
+
+# 한국어 주석: 공식 설정 파일(.agent.config.json)이 프로젝트 루트에 존재하지 않는 신규 수립 환경인 경우, 드래프트를 즉시 공식 설정으로 승격 적용하고 잔재는 소거합니다.
+if [ ! -f "${FINAL_FILE}" ]; then
+  mv "${DRAFT_FILE}" "${FINAL_FILE}"
+  echo "[+] 신규 공식 설정 파일이 성공적으로 수립 및 자동 승격되었습니다: .agent.config.json"
+else
+  # 한국어 주석: 기존 공식 설정이 이미 존재하는 경우, 기존 설정을 안전히 보존하고 임시 생성되었던 드래프트 찌꺼기는 즉각 영구 소거(rm)합니다.
+  rm -f "${DRAFT_FILE}"
+  echo "[~] 프로젝트 루트에 기존 .agent.config.json이 이미 존재하여 기존 설정을 보존하고 드래프트 가비지는 깨끗이 소거했습니다."
+fi
+
 echo "============================================="
 echo "하네스 고도화 초기화가 성공적으로 끝났습니다!"
 echo "============================================="
-
