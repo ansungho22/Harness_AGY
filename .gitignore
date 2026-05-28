@@ -1,0 +1,10 @@
+# 에이전트 하네스 임시 결과물
+.tmp_artifacts/
+.agent/logs/
+
+# 에이전트 CLI 로컬 임시 세션 데이터
+.antigravitycli/
+
+# OS 및 기타 개발 캐시
+.DS_Store
+Thumbs.db
