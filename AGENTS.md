@@ -54,17 +54,17 @@
 
 ## 2. 핵심 임무 및 에이전트 오케스트레이션 (Core Missions & Orchestration)
 
-1. **코드 구현 및 조율**: 사용자의 요구사항에 맞는 코드를 작성하되, 아래의 모든 규칙과 `.agent/rules/` 하위 규칙들을 반드시 준수합니다.
+1. **코드 구현 및 조율**: 사용자의 요구사항에 맞는 코드를 작성하되, 아래의 모든 규칙과 `.agents/rules/` 하위 규칙들을 반드시 준수합니다.
 2. **린트 및 빌드 검증 강제**:
-   * 코드를 수정하거나 새로 작성한 후, 사용자가 커밋을 하기 전 혹은 자율적으로 `.agent/bin/run-test.sh`를 구동하여 린터 및 테스트를 검사하십시오.
+   * 코드를 수정하거나 새로 작성한 후, 사용자가 커밋을 하기 전 혹은 자율적으로 `.agents/skills/run-test/run-test.sh`를 구동하여 린터 및 테스트를 검사하십시오.
 3. **서브 에이전트 활용 (비동기 위임)**:
-   * **QA 테스터 (QA Engineer)**: 기동 테스트 실패 시 에러 로그 분석 및 디버깅 방향 도출을 위임하십시오. (`.agent/prompts/qa_engineer.md`)
-   * **보안 감사자 (Security Auditor)**: 린트 경고 및 보안 위험 요인(비밀키 노출 등)의 상시 감사를 위임하십시오. (`.agent/prompts/security_auditor.md`)
-   * **백엔드 개발자 (Backend Developer)**: API 설계, 데이터베이스 모델링, 클린 비즈니스 레이어 비동기 구현을 위임하십시오. (`.agent/prompts/backend_developer.md`)
-   * **프론트엔드 개발자 (Frontend Developer)**: 모던 UI/UX 스타일링, 상태 관리, 렌더링 성능 최적화 컴포넌트 개발을 위임하십시오. (`.agent/prompts/frontend_developer.md`)
-   * **AI 엔지니어 (AI Engineer)**: LLM 오케스트레이션, 고성능 프롬프트 설계, RAG 및 벡터 DB 파이프라인 설계를 위임하십시오. (`.agent/prompts/ai_engineer.md`)
-   * **데이터 엔지니어 (Data Engineer)**: 대규모 데이터 파싱, ETL 파이프라인 최적화, 멱등성이 보장된 적재 설계를 위임하십시오. (`.agent/prompts/data_engineer.md`)
-   * **아키텍처 분석가 (Architecture Analyst - AA)**: 전체 프로젝트 파일 구조, 의존성 관계, 모듈 결합 설계 및 리팩토링 개선안을 위임하십시오. (`.agent/prompts/architecture_analyst.md`)
+   * **QA 테스터 (QA Engineer)**: 기동 테스트 실패 시 에러 로그 분석 및 디버깅 방향 도출을 위임하십시오. (`.agents/agents/qa_engineer/agent.json`)
+   * **보안 감사자 (Security Auditor)**: 린트 경고 및 보안 위험 요인(비밀키 노출 등)의 상시 감사를 위임하십시오. (`.agents/agents/security_auditor/agent.json`)
+   * **백엔드 개발자 (Backend Developer)**: API 설계, 데이터베이스 모델링, 클린 비즈니스 레이어 비동기 구현을 위임하십시오. (`.agents/agents/backend_developer/agent.json`)
+   * **프론트엔드 개발자 (Frontend Developer)**: 모던 UI/UX 스타일링, 상태 관리, 렌더링 성능 최적화 컴포넌트 개발을 위임하십시오. (`.agents/agents/frontend_developer/agent.json`)
+   * **AI 엔지니어 (AI Engineer)**: LLM 오케스트레이션, 고성능 프롬프트 설계, RAG 및 벡터 DB 파이프라인 설계를 위임하십시오. (`.agents/agents/ai_engineer/agent.json`)
+   * **데이터 엔지니어 (Data Engineer)**: 대규모 데이터 파싱, ETL 파이프라인 최적화, 멱등성이 보장된 적재 설계를 위임하십시오. (`.agents/agents/data_engineer/agent.json`)
+   * **아키텍처 분석가 (Architecture Analyst - AA)**: 전체 프로젝트 파일 구조, 의존성 관계, 모듈 결합 설계 및 리팩토링 개선안을 위임하십시오. (`.agents/agents/architecture_analyst/agent.json`)
 4. **자동 피드백 루프**:
    * 테스트 실패 시 즉시 자율 디버깅을 시작하여 코드를 스스로 고치고 다시 기동 테스트를 실행하는 피드백 루프를 반복하십시오. 최대 3회로 제한하며, 해결이 안 될 경우 사용자에게 에러 로그와 함께 보고하십시오.
 
@@ -76,9 +76,9 @@
 1. **정적 분석 및 린트 강제**:
    * 모든 수정 사항은 설정된 린터(`.agent.config.json` 내 `lint_command`)의 규칙을 무조건 통과해야 합니다.
 2. **Git Commit 차단 (Pre-commit Hook)**:
-   * 코드가 커밋되기 직전 `.agent/hooks/pre-commit.sh`가 구동되어 린트 및 기동 테스트를 자동 실행합니다. 통과하지 못한 코드는 저장소에 들어올 수 없으므로 완성되지 않은 불완전한 코드는 커밋하지 마십시오.
+   * 코드가 커밋되기 직전 `.agents/hooks/pre-commit.sh`가 구동되어 린트 및 기동 테스트를 자동 실행합니다. 통과하지 못한 코드는 저장소에 들어올 수 없으므로 완성되지 않은 불완전한 코드는 커밋하지 마십시오.
 3. **레이어 위반 금지**:
-   * 아키텍처 제약 규칙([architecture.rule.md](.agent/rules/architecture.rule.md))을 준수하며, 특히 도메인 레이어에서 외부 인프라스트럭처 레이어를 직접 참조(Import)하는 행위를 엄격히 금지합니다.
+   * 아키텍처 제약 규칙([architecture.rule.md](.agents/rules/architecture.rule.md))을 준수하며, 특히 도메인 레이어에서 외부 인프라스트럭처 레이어를 직접 참조(Import)하는 행위를 엄격히 금지합니다.
 
 ---
 
@@ -91,7 +91,7 @@
   * 새로운 외부 라이브러리, DB 프레임워크 또는 아키텍처적 구성을 도입하기 전, 반드시 기존에 정의된 ADR 기록을 샅샅이 탐색하여 기존 결정을 100% 존중하십시오.
 * **실패 경험 기록 (Failures Log)**: [docs/failures/](docs/failures/)
   * 과거 설계 실패, 치명적 에러, 또는 서드파티 통신 복구 실패 등의 사례를 확인하여 동일한 오류를 다시 범하는 것을 차단하십시오.
-* **코딩 가이드라인**: [.agent/rules/guidelines.rule.md](.agent/rules/guidelines.rule.md)
+* **코딩 가이드라인**: [.agents/rules/guidelines.rule.md](.agents/rules/guidelines.rule.md)
   * 소스코드 내 모든 설명과 주석이 한국어로 작성되어야 하는 핵심 수칙을 리마인드하십시오.
 
 ### 2. 작업 후: 의사결정 역사 및 우회법 자율 기록 (Write)
@@ -129,8 +129,8 @@
 사용자가 채팅 프롬프트 세션 중에 슬래시(`/`) 기호로 시작하는 아래 단축 명령어를 입력할 경우, 메인 에이전트는 장황한 자연어 대화나 설명 모드를 우회하여, 매핑된 로컬 쉘 명령어(`run_command`)를 지체 없이 즉시 가동해야 합니다. 실행 완료 후 그 터미널 출력 결과만 정갈하게 한글로 요약하여 보고하십시오.
 
 1. **`/init`**:
-   * 즉시 로컬 터미널에서 `./.agent/bin/init.sh` 스크립트를 실행하여 프로젝트 임시 디렉토리 구성 및 로컬 Git hooks를 성공적으로 동기화하며, 자동 분석된 기술 스택 기반의 설정 파일 드래프트(`.agent.config.json.draft`)를 토대로 사용자 브리핑 피드백 루프(6장)를 즉각 가동합니다.
+   * 즉시 로컬 터미널에서 `./.agents/skills/init/init.sh` 스크립트를 실행하여 프로젝트 임시 디렉토리 구성 및 로컬 Git hooks를 성공적으로 동기화하며, 자동 분석된 기술 스택 기반의 설정 파일 드래프트(`.agent.config.json.draft`)를 토대로 사용자 브리핑 피드백 루프(6장)를 즉각 가동합니다.
 2. **`/test`**:
-   * 즉시 로컬 터미널에서 `./.agent/bin/run-test.sh` 스크립트를 실행하여 프로젝트 전체 린트 및 기능 기동 테스트를 일괄 검증하고 그 성공/실패 여부를 진단합니다.
+   * 즉시 로컬 터미널에서 `./.agents/skills/run-test/run-test.sh` 스크립트를 실행하여 프로젝트 전체 린트 및 기능 기동 테스트를 일괄 검증하고 그 성공/실패 여부를 진단합니다.
 3. **`/clean`**:
-   * 즉시 로컬 터미널에서 `./.agent/hooks/post-task.sh` 스크립트를 실행하여 `.tmp_artifacts/` 디렉토리 내에 남은 잔여 임시 로그 및 불필요한 캐시 아티팩트 파일들을 자율 클리닝합니다.
+   * 즉시 로컬 터미널에서 `./.agents/hooks/post-task.sh` 스크립트를 실행하여 `.tmp_artifacts/` 디렉토리 내에 남은 잔여 임시 로그 및 불필요한 캐시 아티팩트 파일들을 자율 클리닝합니다.

@@ -10,7 +10,7 @@ set -e
 
 # 프로젝트 루트 디렉토리 정의
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-AGENT_DIR="${PROJECT_ROOT}/.agent"
+AGENT_DIR="${PROJECT_ROOT}/.agents"
 
 echo "============================================="
 echo "Antigravity 에이전트 하네스 고도화 초기화를 시작합니다."
@@ -29,9 +29,9 @@ fi
 LOGS_DIR="${AGENT_DIR}/logs"
 if [ ! -d "${LOGS_DIR}" ]; then
   mkdir -p "${LOGS_DIR}"
-  echo "[+] 로그 디렉토리 생성 완료: .agent/logs"
+  echo "[+] 로그 디렉토리 생성 완료: .agents/logs"
 else
-  echo "[~] 로그 디렉토리 이미 존재함: .agent/logs"
+  echo "[~] 로그 디렉토리 이미 존재함: .agents/logs"
 fi
 
 # 3. 지식 저장소 폴더 구조 자동 빌드 (docs/adr, docs/failures)
@@ -66,13 +66,13 @@ fi
 GITIGNORE_FILE="${PROJECT_ROOT}/.gitignore"
 if [ -f "${GITIGNORE_FILE}" ]; then
   if ! grep -q ".tmp_artifacts" "${GITIGNORE_FILE}"; then
-    echo -e "\n# 에이전트 하네스 임시 결과물\n.tmp_artifacts/\n.agent/logs/" >> "${GITIGNORE_FILE}"
+    echo -e "\n# 에이전트 하네스 임시 결과물\n.tmp_artifacts/\n.agents/logs/" >> "${GITIGNORE_FILE}"
     echo "[+] .gitignore에 하네스 무시 규칙이 추가되었습니다."
   else
     echo "[~] .gitignore에 이미 관련 규칙이 등록되어 있습니다."
   fi
 else
-  echo -e "# 에이전트 하네스 임시 결과물\n.tmp_artifacts/\n.agent/logs/" > "${GITIGNORE_FILE}"
+  echo -e "# 에이전트 하네스 임시 결과물\n.tmp_artifacts/\n.agents/logs/" > "${GITIGNORE_FILE}"
   echo "[+] .gitignore 파일을 새로 생성하고 규칙을 기록했습니다."
 fi
 

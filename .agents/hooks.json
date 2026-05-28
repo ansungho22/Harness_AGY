@@ -1,0 +1,5 @@
+{
+  "pre_commit": "hooks/pre-commit.sh",
+  "on_test_fail": "hooks/on-test-fail.sh",
+  "post_task": "hooks/post-task.sh"
+}

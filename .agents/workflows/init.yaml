@@ -1,0 +1,5 @@
+name: init
+description: "하네스 초기화 및 로컬 Git hooks를 성공적으로 동기화합니다 (Triggers the initialization of the agent harness)."
+command: /init
+steps:
+  - call_skill: init

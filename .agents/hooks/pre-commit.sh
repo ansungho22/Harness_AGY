@@ -4,7 +4,7 @@
 # 코드 검증이 완전히 통과되지 않은 불안정한 상태에서는 커밋을 원천 봉쇄합니다.
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-TEST_RUNNER="${PROJECT_ROOT}/.agent/bin/run-test.sh"
+TEST_RUNNER="${PROJECT_ROOT}/.agents/skills/run-test/run-test.sh"
 
 echo "============================================="
 echo "[+] Git Commit 사전 검증 시작 (Pre-commit)"

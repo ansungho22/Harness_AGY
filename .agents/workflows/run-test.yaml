@@ -1,0 +1,5 @@
+name: run-test
+description: "설정된 린터와 기동 테스트 스위트를 즉각 일괄 실행하여 코드를 검증합니다 (Triggers the test suite using the run-test skill)."
+command: /run-test
+steps:
+  - call_skill: run-test

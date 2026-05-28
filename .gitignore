@@ -1,6 +1,6 @@
 # 에이전트 하네스 임시 결과물
 .tmp_artifacts/
-.agent/logs/
+.agents/logs/
 
 # 에이전트 CLI 로컬 임시 세션 데이터
 .antigravitycli/
