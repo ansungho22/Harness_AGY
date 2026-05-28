@@ -76,6 +76,80 @@ else
   echo "[+] .gitignore 파일을 새로 생성하고 규칙을 기록했습니다."
 fi
 
+# 6. 기술 스택 자동 감지 및 설정 드래프트 생성
+echo "============================================="
+echo "[+] 프로젝트 기술 스택 스캔을 시작합니다..."
+echo "============================================="
+
+DETECTED_TYPE="unknown"
+LINT_CMD="mock-lint"
+TEST_CMD="mock-test"
+SRC_DIR="./src"
+
+if [ -f "${PROJECT_ROOT}/package.json" ]; then
+  DETECTED_TYPE="nodejs"
+  LINT_CMD="npm run lint"
+  TEST_CMD="npm test"
+  SRC_DIR="./src"
+elif [ -f "${PROJECT_ROOT}/requirements.txt" ] || [ -f "${PROJECT_ROOT}/pyproject.toml" ] || [ -f "${PROJECT_ROOT}/setup.py" ] || [ -f "${PROJECT_ROOT}/Pipfile" ]; then
+  DETECTED_TYPE="python"
+  LINT_CMD="ruff check"
+  TEST_CMD="pytest"
+  SRC_DIR="."
+elif [ -f "${PROJECT_ROOT}/go.mod" ]; then
+  DETECTED_TYPE="go"
+  LINT_CMD="go vet ./..."
+  TEST_CMD="go test ./..."
+  SRC_DIR="."
+elif [ -f "${PROJECT_ROOT}/Cargo.toml" ]; then
+  DETECTED_TYPE="rust"
+  LINT_CMD="cargo clippy"
+  TEST_CMD="cargo test"
+  SRC_DIR="./src"
+elif [ -f "${PROJECT_ROOT}/pom.xml" ] || [ -f "${PROJECT_ROOT}/build.gradle" ]; then
+  DETECTED_TYPE="java"
+  LINT_CMD="mvn compile"
+  if [ -f "${PROJECT_ROOT}/build.gradle" ]; then
+    TEST_CMD="./gradlew test"
+  else
+    TEST_CMD="mvn test"
+  fi
+  SRC_DIR="./src"
+fi
+
+if [ "${DETECTED_TYPE}" != "unknown" ]; then
+  echo "[+] 감지된 기술 스택: ${DETECTED_TYPE}"
+  echo "[+] 제안된 린트 명령어: ${LINT_CMD}"
+  echo "[+] 제안된 테스트 명령어: ${TEST_CMD}"
+else
+  echo "[!] 감지된 기술 스택이 없으므로 기본(nodejs-example) 모의 설정을 제안합니다."
+  DETECTED_TYPE="nodejs-example"
+  LINT_CMD="npm run lint"
+  TEST_CMD="npm test"
+fi
+
+# 드래프트 JSON 파일 경로 정의
+DRAFT_FILE="${PROJECT_ROOT}/.agent.config.json.draft"
+
+if [ -f "${PROJECT_ROOT}/.agent.config.json" ]; then
+  echo "[~] 기존 .agent.config.json 파일이 이미 존재합니다. 안전을 위해 덮어쓰지 않고 드래프트 파일만 생성합니다."
+fi
+
+# 드래프트 파일 작성 (한국어 주석 포함)
+cat <<EOF > "${DRAFT_FILE}"
+{
+  "project_type": "${DETECTED_TYPE}",
+  "lint_command": "${LINT_CMD}",
+  "test_command": "${TEST_CMD}",
+  "src_directory": "${SRC_DIR}",
+  "telemetry": {
+    "enabled": false
+  }
+}
+EOF
+
+echo "[+] 기술 스택 분석 결과를 담은 드래프트 설정 파일이 생성되었습니다: .agent.config.json.draft"
 echo "============================================="
 echo "하네스 고도화 초기화가 성공적으로 끝났습니다!"
 echo "============================================="
+
