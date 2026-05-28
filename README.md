@@ -38,7 +38,7 @@ my-project/                         # 대상 소스코드 프로젝트 루트
 │   │   ├── qa_engineer/             # 테스트 시나리오 작성 및 기동 에러 디버깅 에이전트
 │   │   ├── backend_developer/       # 고성능 API 구현 및 DB 스키마/모델링 전문 백엔드 에이전트
 │   │   ├── frontend_developer/      # 프리미엄 UI/UX 구현 및 렌더링 최적화 프론트엔드 에이전트
-│   │   ├── ai_engineer/             # LLM 오케스트레이션 및 RAG/벡터 DB 파이프라인 설계 전문 AI 에이전트
+│   │   ├── ai_engineer/             # LLM 연동, RAG 및 벡터 DB 설계 전문 AI 에이전트
 │   │   └── data_engineer/           # ETL 파이프라인 구축 및 대규모 가공/적재 전문 데이터 에이전트
 │   │
 │   ├── skills/                      # agy 슬래시 커맨드에 연동되는 실행 가능한 스킬 단위
@@ -72,50 +72,84 @@ my-project/                         # 대상 소스코드 프로젝트 루트
 
 ## 3. 설치 및 초기화 (Setup & Getting Started) ⚙️
 
+하네스를 연동하고 개발 환경에 정식 플러그인으로 온보딩하기 위한 구체적인 사용자 조치 절차입니다.
+
 ### 1단계: 하네스 서브모듈 연동 (Submodule Setup)
-대상 프로젝트의 루트 경로에서 Git 서브모듈로 하네스를 추가하고 다운로드합니다.
+하네스를 도입하고자 하는 대상 소스코드 프로젝트 루트 경로에서 Git 서브모듈로 하네스 원본 코드를 내려받습니다.
 ```bash
 git submodule add https://github.com/ansungho22/Harness_AGY.git .agents
 git submodule update --init --recursive
 ```
+* **동작 원리**: 이 명령어를 실행하면 껍데기 빈 폴더 상태인 `.agents/` 디렉토리 내에 실제 하네스의 8인 에이전트 설정 및 실행 스크립트 파일들이 원격 서버로부터 안전하게 조립(Download)됩니다.
 
 ### 2단계: agy 공식 플러그인 등록 (Plugin Install)
-하네스를 `agy` CLI 환경에 공식 플러그인으로 등록합니다. 이 명령어를 통해 `agy`가 8인의 서브 에이전트 및 `/init` 등의 기능을 완벽하게 매핑하여 인식하게 됩니다.
+하네스를 `agy` CLI 환경에 공식 플러그인으로 등록합니다.
 ```bash
 agy plugin install .agents
 ```
+* **동작 원리**: 이 명령어를 실행하면 `agy` 프레임워크가 사용자 PC의 홈 디렉토리 내부 경로인 **`~/.gemini/config/plugins/software-development-team`** 하위에 이 하네스 패키지를 심볼릭 링크로 정식 등록합니다. 이 연동이 완료되어야만 에이전트 대화창에서 8인의 전문 요원 오케스트레이션 및 `/init`, `/test` 등의 슬래시 단축 명령 기능이 네이티브하게 완전히 활성화됩니다.
 
 ### 3단계: 지능형 하네스 초기화 실행 (Initialization)
-초기화 스크립트에 권한을 부여하고 실행합니다.
+초기화 스크립트를 직접 가동하여 환경 설정을 구축합니다.
 ```bash
-# 쉘 스크립트 실행 권한 부여
+# [권장] 권한 오류(Permission Denied)를 마주할 경우에만 단회성으로 실행해 줍니다.
 chmod +x .agents/skills/init/init.sh .agents/skills/run-test/run-test.sh
 chmod +x .agents/hooks/pre-commit.sh .agents/hooks/on-test-fail.sh .agents/hooks/post-task.sh
 
-# 초기화 실행
+# 초기화 스크립트 수동 기동
 ./.agents/skills/init/init.sh
 ```
 
 ---
 
-## 4. `/init` 초기화 및 온보딩의 작동 순서 (Init Pipeline) 🏁
+## 4. `/init` 작동 파이프라인 및 사용자 최종 확정 조치 🏁
 
-초기화 스크립트(`init.sh`)가 실행되면 아래의 **6단계 무결성 온보딩 파이프라인**이 물 흐르듯 순차적으로 가동됩니다.
+`./.agents/skills/init/init.sh` 초기화 스크립트가 실행되면 아래의 **6단계 무결성 온보딩 파이프라인**이 동적으로 자동 완수됩니다.
 
 ```
-[init.sh 실행] 
+[init.sh 실행 완료] 
     │
-    ├── 1. 임시 아티팩트(.tmp_artifacts) 및 에이전트 logs/ 디렉토리 자율 구축
-    ├── 2. 5대 전용 지식보존 폴더(system_design, refactoring, security, testing, adr, failures) 생성
-    ├── 3. 각 전용 폴더 내에 역할과 작성법을 담은 "한글 안내 README.md" 파일 동적 작성
-    ├── 4. Git 사전 검문소(.git/hooks/pre-commit)로 pre-commit.sh 정밀 연동 및 실행 권한 활성화
-    ├── 5. .gitignore 파일 분석 후 무시 규칙(.tmp_artifacts/, logs/) 자동 수정 및 추가
-    └── 6. 프로젝트 내 설정 파일을 자동 스캔 및 스택 분석하여 최적의 `.agent.config.json.draft` 초안 빌드
+    ├── 1. 임시 아티팩트(.tmp_artifacts/) 및 에이전트 logs/ 디렉토리 자율 구축 완료
+    ├── 2. 5대 전용 지식보존 폴더(system_design, refactoring, security, testing, adr, failures) 생성 완료
+    ├── 3. 각 전용 폴더 내에 역할과 작성법을 담은 "한글 안내 README.md" 파일 동적 자동 작성 완료
+    ├── 4. Git 사전 검문소(.git/hooks/pre-commit)로 pre-commit.sh 정밀 연동 및 실행 권한 활성화 완료
+    ├── 5. .gitignore 파일 분석 후 무시 규칙(.tmp_artifacts/, logs/) 자동 수정 및 추가 완료
+    └── 6. 프로젝트 내 설정 파일을 자동 스캔 및 스택 분석하여 최적의 `.agent.config.json.draft` 초안 빌드 완료
 ```
 
-> [!TIP]
-> **지능형 스택 감지 및 동적 빌드**:
-> 최초 초기화 과정에서 에이전트는 프로젝트 내의 설정 파일들(`package.json`, `requirements.txt`, `Cargo.toml`, `go.mod`, `pom.xml` 등)을 스스로 스캔하여 기술 스택을 완벽히 감지합니다. 감지된 린트/테스트 명령어를 기반으로 설정 초안(`.agent.config.json.draft`)을 생성해 주며, 사용자와 피드백 조율을 거쳐 최적의 `.agent.config.json`을 직접 자동 빌드하여 세팅을 마칩니다.
+### ⚠️ [중요] 초기화 기동 직후 개발자(사용자)가 밟아야 하는 3단계 최종 수동 조치
+
+지능형 스캔을 통해 드래프트 초안 파일(`.agent.config.json.draft`)이 생성된 직후, 사용자는 온보딩을 매듭짓기 위해 반드시 아래의 **3단계 최종 확정 액션**을 수행해 주어야 비로소 완벽한 개발 준비가 끝납니다.
+
+```
+[초기화 스크립트 기동 끝] 
+       │
+       ▼
+┌────────────────────────────────────────────────────────┐
+│ [1단계] 설정 드래프트 검토 (.agent.config.json.draft)   │
+│  - 에이전트가 스캔한 기술 스택과 제안한 린트/테스트         │
+│    명령어가 올바른지 눈으로 직접 정독하고 검증합니다.   │
+└───────────────────────┬────────────────────────────────┘
+                        │
+                        ▼
+┌────────────────────────────────────────────────────────┐
+│ [2단계] 설정 공식 최종 확정 (.agent.config.json)        │
+│  - 검토 완료 후, 드래프트 초안 파일의 복제본을 만들거나    │
+│    이름을 바꾸어 최종 '.agent.config.json'을 생성합니다.│
+│  - $ cp .agent.config.json.draft .agent.config.json    │
+└───────────────────────┬────────────────────────────────┘
+                        │
+                        ▼
+┌────────────────────────────────────────────────────────┐
+│ [3단계] 최초 1회 수동 기동성 검사 (/test 실행)         │
+│  - 에이전트 채팅창에서 수동으로 '/test' 명령을 입력하여, │
+│    로컬 린터 및 테스트가 문제없이 빌드되는지 실증합니다.   │
+└────────────────────────────────────────────────────────┘
+```
+
+> [!IMPORTANT]
+> **설정 파일(`.agent.config.json`)을 확정하지 않으면 어떻게 되나요?**
+> 확정된 설정 파일이 프로젝트 루트에 존재하지 않으면, 커밋 시점에 동작하는 **Pre-commit 사전 검문 훅이 실제 린트/테스트 명령어를 구동하지 못하고 안전 모의(Mock) 시뮬레이션 모드로만 기동**하게 됩니다. 실제 로컬 프로젝트 빌드 환경을 엄격하게 결합 검증하려면 반드시 **2단계 수동 확정 조치**를 마쳐주셔야 합니다!
 
 ---
 
@@ -168,7 +202,19 @@ chmod +x .agents/hooks/pre-commit.sh .agents/hooks/on-test-fail.sh .agents/hooks
 
 ---
 
-## 7. 서브모듈 업데이트 (Submodule Update) 🔄
+## 7. 슬래시 단축 명령어 가이드 (Slash Commands) ⚡
+
+에이전트 CLI 실행 중 대화창에서 아래의 슬래시(`/`) 커맨드를 입력하면, 에이전트의 일반 자연어 답변을 우회하여 **매핑된 하네스 백엔드 스크립트 실행 툴(`run_command`)을 자율적이고 즉각적으로 트리거**하여 실행합니다.
+
+| 슬래시 명령어 | 실행 매핑 백엔드 명령어 | 동작 역할 |
+| :--- | :--- | :--- |
+| **`/init`** | `.agents/skills/init/init.sh` | 로컬 임시 디렉토리 및 5대 지식 폴더와 Git pre-commit 훅 자동 복사 및 동기화 |
+| **`/test`** | `.agents/skills/run-test/run-test.sh` | `.agent.config.json` 설정을 읽어 린트 및 기능 테스트를 즉시 일괄 수행 및 보고 |
+| **`/clean`** | `.agents/hooks/post-task.sh` | 빌드 시 생성된 `.tmp_artifacts/` 하위의 가비지 캐시 및 임시 로그 아티팩트 청소 |
+
+---
+
+## 8. 서브모듈 업데이트 (Submodule Update) 🔄
 
 하네스 리포지토리에 기능 업데이트나 최적화 패치가 발생했을 때, 연동된 프로젝트에서 다음 명령어로 간편하게 최신 버전을 병합하여 반영합니다.
 ```bash
