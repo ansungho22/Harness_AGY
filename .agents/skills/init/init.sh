@@ -43,9 +43,39 @@ if [ ! -d "${ADR_DIR}" ]; then
   echo "[+] 지식 저장소 디렉토리 생성 완료: docs/adr"
 fi
 
+# 한국어 주석: ADR 디렉토리 가이드용 README.md 파일이 존재하지 않는 경우 자동으로 작성합니다.
+if [ ! -f "${ADR_DIR}/README.md" ]; then
+  cat <<'EOF' > "${ADR_DIR}/README.md"
+# Architecture Decision Records (ADR)
+
+이 디렉토리는 프로젝트의 중요한 기술적 및 아키텍처적 의사결정 역사를 영구적으로 기록하는 저장소입니다.
+
+## ✍️ 작성 규칙
+* **의사결정의 배경과 맥락**: 새로운 라이브러리 도입, 설계 구조 변경, 통신 프레임워크 결정 등의 이유를 작성합니다.
+* **트레이드오프 기재**: 선택한 설계의 장점과 함께 포기해야 했던 단점들을 함께 명시합니다.
+* **파일 이름**: 순번 형식의 파일 이름(예: `0001-setup-framework.md`)을 사용하여 히스토리를 정렬합니다.
+EOF
+  echo "[+] ADR 가이드 README 생성 완료: docs/adr/README.md"
+fi
+
 if [ ! -d "${FAILURES_DIR}" ]; then
   mkdir -p "${FAILURES_DIR}"
   echo "[+] 지식 저장소 디렉토리 생성 완료: docs/failures"
+fi
+
+# 한국어 주석: Failures 디렉토리 가이드용 README.md 파일이 존재하지 않는 경우 자동으로 작성합니다.
+if [ ! -f "${FAILURES_DIR}/README.md" ]; then
+  cat <<'EOF' > "${FAILURES_DIR}/README.md"
+# Failures Log (실패 경험 기록 저장소)
+
+이 디렉토리는 구현 및 운영 과정에서 겪은 아키텍처적 실패, 까다로운 컴파일/빌드 에러, 혹은 서드파티 장애 극복 경험을 기록하는 지식 저장소입니다.
+
+## ✍️ 작성 규칙
+* **실패 상황**: 구체적으로 어떤 비정상적인 버그나 에러가 일어났는지 에러 로그를 포함하여 작성합니다.
+* **원인 분석**: 해당 장애나 오류가 발생한 근본적인 원인을 설명합니다.
+* **극복 및 우회책(Workaround)**: 임시 혹은 영구적으로 어떻게 문제를 해결하고 우회 설계를 도입했는지 정리하여, 다른 에이전트들이 같은 실수를 반복하지 않도록 가이드라인을 제시합니다.
+EOF
+  echo "[+] Failures 가이드 README 생성 완료: docs/failures/README.md"
 fi
 
 # 4. Git Pre-commit Hook 자동 연동
