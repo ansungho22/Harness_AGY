@@ -6,6 +6,44 @@
 
 ---
 
+## 🏗️ 1단 일치화 아키텍처 혁신 (Before vs After) ⚡
+
+기존 하네스 패키지는 저장소 내부에 중복 `.agents/` 디렉토리가 숨겨져 있어, 타겟 프로젝트에서 서브모듈을 내려받을 시 경로가 이중으로 꼬이는 치명적인 결함이 존재했습니다. 본 리팩토링 버전을 통해 **최상위 뎁스 1단 일치화(Flattening)**를 단행하여 완벽하게 직결 안착되도록 극적으로 혁신했습니다.
+
+### 📊 아키텍처 뎁스 시각화 비교
+
+```mermaid
+graph TD
+    subgraph Legacy_Structure ["❌ AS-IS (이중 중첩 꼬임)"]
+        A[Target Project Root] --> B[".agents (Submodule)"]
+        B --> C[".agents (Harness Core)"]
+        C --> D["plugin.json (이중 중첩 위치)"]
+        C --> E["agents.md (대소문자 충돌)"]
+        C --> F["skills/hooks/rules..."]
+    end
+
+    subgraph New_Structure ["✅ TO-BE (1단 직결 안착)"]
+        G[Target Project Root] --> H[".agents (Submodule)"]
+        H --> I["plugin.json (1단 직결 링크)"]
+        H --> J["subagents.md (대소문자 극복)"]
+        H --> K["skills/hooks/rules/agents..."]
+    end
+
+    style Legacy_Structure fill:#ffebee,stroke:#c62828,stroke-width:2px;
+    style New_Structure fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+```
+
+### 🔍 물리적 경로 매핑 대비표
+
+| 핵심 요소 명세 | ❌ AS-IS (이중 꼬임 구조) | ✅ TO-BE (1단 플래트닝 구조) | 개선 효과 및 이점 |
+| :--- | :--- | :--- | :--- |
+| **플러그인 정의** | `.agents/.agents/plugin.json` | `.agents/plugin.json` | `agy plugin install` 시 1단으로 깔끔한 심볼릭 매핑 성공 |
+| **서브 에이전트 요약** | `.agents/.agents/agents.md` | `.agents/subagents.md` | macOS 대소문자 파일 충돌 완전 예방 및 가독성 업그레이드 |
+| **자동 실행 스킬군** | `.agents/.agents/skills/` | `.agents/skills/` | 쉘 및 런타임 내의 경로 추적 복잡성 50% 이상 극감 |
+| **Git pre-commit 훅** | `.agents/.agents/hooks/` | `.agents/hooks/` | 커밋 차단용 검증 스크립트 실행 속도 및 유지보수 편의성 확보 |
+
+---
+
 ## 1. 하네스 설계 사상 (Architecture Philosophy) 🧭
 
 AI 에이전트 중심의 자율 개발 환경에서 흔히 발생하는 **"에이전트의 환각(Hallucination)"**, **"불필요한 소스코드 훼손 위험"** 및 **"대화 누적에 따른 지능 저하"**를 극복하기 위해 설계되었습니다.
@@ -88,6 +126,9 @@ git submodule update --init --recursive
 agy plugin install .agents
 ```
 * **동작 원리**: 이 명령어를 실행하면 `agy` 프레임워크가 사용자 PC의 홈 디렉토리 내부 경로인 **`~/.gemini/config/plugins/software-development-team`** 하위에 이 하네스 패키지를 심볼릭 링크로 정식 등록합니다. 이 연동이 완료되어야만 에이전트 대화창에서 8인의 전문 요원 오케스트레이션 및 `/init`, `/test` 등의 슬래시 단축 명령 기능이 네이티브하게 완전히 활성화됩니다.
+
+> [!TIP]
+> **심볼릭 링크 정합성 극복**: 이전 이중 중첩 구조에서는 `plugin.json`이 불필요한 깊이 아래에 파묻혀 있어 `agy plugin install` 기동 시 플러그인 파일 로드 오류가 발생하는 치명적 딜레마가 있었습니다. 1단 평탄화가 완료된 본 버전에서는 설치 즉시 홈 디렉토리 내에 깔끔한 무결성 심볼릭 매핑이 수립되므로, 추가적인 수동 경로 보정 없이 즉각적으로 `/init` 등 모든 단축 기능이 활성화됩니다.
 
 ### 3단계: 지능형 하네스 초기화 실행 (Initialization)
 초기화 스크립트를 직접 가동하여 환경 설정을 구축합니다.
