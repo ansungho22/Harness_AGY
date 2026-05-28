@@ -29,7 +29,6 @@ my-project/                         # 대상 소스코드 프로젝트 루트
 │
 ├── .agents/                         # ✅ 에이전트 하네스 코어 (Git 서브모듈 본체)
 │   ├── plugin.json                  # agy CLI 플러그인 메타데이터 명세
-│   ├── hooks.json                   # 훅 스크립트 경로 매핑 명세
 │   ├── agents.md                    # 서브 에이전트 목록 요약 명세
 │   │
 │   ├── agents/                      # 전문 서브 에이전트 정의 (각 폴더 내 agent.json 보유)
