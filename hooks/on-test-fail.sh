@@ -3,7 +3,12 @@
 # 한국어 주석: 테스트 혹은 빌드 실패 시 구동되는 피드백 훅입니다.
 # 에러가 기록된 파일을 탐지하여 메인 에이전트 및 QA 서브 에이전트가 이를 추적하도록 돕습니다.
 
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# 한국어 주석: 실행 중인 디렉토리 또는 Git 최상위 루트 디렉토리를 탐색하여 설정합니다.
+if git rev-parse --show-toplevel >/dev/null 2>&1; then
+  PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+else
+  PROJECT_ROOT="$(pwd)"
+fi
 ERROR_LOG="${PROJECT_ROOT}/.tmp_artifacts/test_error.log"
 
 echo "============================================="

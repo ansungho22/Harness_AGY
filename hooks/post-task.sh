@@ -3,7 +3,12 @@
 # 한국어 주석: 에이전트 하네스 작업 종료 후 실행되는 가비지 컬렉션(GC) 훅 스크립트입니다.
 # 에이전트가 작업 중 발생시킨 임시 파일 및 로그를 말끔히 비워냅니다.
 
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# 한국어 주석: 실행 중인 디렉토리 또는 Git 최상위 루트 디렉토리를 탐색하여 설정합니다.
+if git rev-parse --show-toplevel >/dev/null 2>&1; then
+  PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+else
+  PROJECT_ROOT="$(pwd)"
+fi
 TMP_DIR="${PROJECT_ROOT}/.tmp_artifacts"
 
 echo "============================================="

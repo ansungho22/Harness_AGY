@@ -185,16 +185,25 @@ fi
 
 # 5. .gitignore에 임시 폴더 등록 여부 확인 및 추가
 GITIGNORE_FILE="${PROJECT_ROOT}/.gitignore"
-if [ -f "${GITIGNORE_FILE}" ]; then
-  if ! grep -q ".tmp_artifacts" "${GITIGNORE_FILE}"; then
-    echo -e "\n# 에이전트 하네스 임시 결과물\n.tmp_artifacts/\n.agents/logs/" >> "${GITIGNORE_FILE}"
-    echo "[+] .gitignore에 하네스 무시 규칙이 추가되었습니다."
-  else
-    echo "[~] .gitignore에 이미 관련 규칙이 등록되어 있습니다."
-  fi
+if [ ! -f "${GITIGNORE_FILE}" ]; then
+  touch "${GITIGNORE_FILE}"
+  echo "[+] .gitignore 파일을 새로 생성했습니다."
+fi
+
+ADDED_RULES=0
+if ! grep -q "^.tmp_artifacts/$" "${GITIGNORE_FILE}"; then
+  echo -e "\n# 에이전트 하네스 임시 결과물\n.tmp_artifacts/" >> "${GITIGNORE_FILE}"
+  ADDED_RULES=1
+fi
+if ! grep -q "^.agents/logs/$" "${GITIGNORE_FILE}"; then
+  echo ".agents/logs/" >> "${GITIGNORE_FILE}"
+  ADDED_RULES=1
+fi
+
+if [ "$ADDED_RULES" -eq 1 ]; then
+  echo "[+] .gitignore에 하네스 무시 규칙이 성공적으로 추가/보완되었습니다."
 else
-  echo -e "# 에이전트 하네스 임시 결과물\n.tmp_artifacts/\n.agents/logs/" > "${GITIGNORE_FILE}"
-  echo "[+] .gitignore 파일을 새로 생성하고 규칙을 기록했습니다."
+  echo "[~] .gitignore에 이미 관련 무시 규칙이 모두 등록되어 있습니다."
 fi
 
 # 6. 기술 스택 자동 감지 및 설정 드래프트 생성
